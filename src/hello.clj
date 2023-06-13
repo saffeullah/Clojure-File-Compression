@@ -60,6 +60,18 @@
 
 
 
+(defn find-word-by-frequency [frequency filename]
+  (with-open [reader (io/reader filename)]
+    (let [content (slurp reader)
+          words (clojure.string/split content #"\s+")
+          unique-words (distinct words)
+          word (nth unique-words frequency)]
+      (if word
+        word
+        ""))))
+
+
+
 
 
 
@@ -81,7 +93,11 @@
     ;  )
 
   ;save-string-to-file ((compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information? ") "t1.txt.cx")
-  (save-string-to-file (compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information?") "t1.txt.cx")
+  ;(save-string-to-file (compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information?") "t1.txt.cx")
+
+  (println (find-word-by-frequency 41 "./src/frequency.txt")  )
+
+
 
   ;(println (find-first-occurrence-frequency-word "0" "./src/frequency.txt"))
 
