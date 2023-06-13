@@ -72,6 +72,21 @@
 
 
 
+(defn process-text-from-file [filename]
+  (  let [updated-filename (str "./src/" filename)]
+  (with-open [reader (io/reader updated-filename)]
+    (let [content (slurp reader)
+          words (clojure.string/split content #"\s+")]
+      (clojure.string/join " " (map #(if (re-matches #"^\d+$" %)
+                                       (if (re-matches #"^@\d+@" %)
+                                         (str (subs % 1 (dec (count %))))
+                                         (find-word-by-frequency (Integer/parseInt %) "./src/frequency.txt"))
+                                       %) words))))))
+
+
+
+
+
 
 
 
@@ -95,8 +110,11 @@
   ;save-string-to-file ((compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information? ") "t1.txt.cx")
   ;(save-string-to-file (compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information?") "t1.txt.cx")
 
-  (println (find-word-by-frequency 41 "./src/frequency.txt")  )
+  ;(println (find-word-by-frequency 41 "./src/frequency.txt")  )
 
+
+  (println (let [processed-text (process-text-from-file "t1.txt.cx")]
+             processed-text))
 
 
   ;(println (find-first-occurrence-frequency-word "0" "./src/frequency.txt"))
