@@ -45,9 +45,19 @@
 
 
 (defn compress-string [input-string]
-  (let [words (clojure.string/split input-string #"\s+")]
-    ;(apply str (map #(str (find-first-occurrence-frequency % "./src/frequency.txt")) words+ " "))))
-    (clojure.string/join " " (map #(str (find-first-occurrence-frequency % "./src/frequency.txt")) words))))
+  (let [words (clojure.string/split input-string #"\b")
+        processed-words (map #(if (re-matches #"\d+" %)
+                                (str "@" % "@") ; If the word is a number, surround it with @ symbols
+                                (let [processed-word (find-first-occurrence-frequency (clojure.string/replace % #"\W" "") "./src/frequency.txt")]
+                                  (str processed-word (clojure.string/join (re-seq #"\W" %))))) words)]
+    (clojure.string/join " " processed-words)))
+
+
+(defn save-string-to-file [content filename]
+  (  let [updated-filename (str "./src/" filename)]
+    (spit updated-filename content)
+    ))
+
 
 
 
@@ -69,7 +79,11 @@
     ;    (println file-string)
     ;
     ;  )
-    (println (compress-string "The pink elephant is absolutely groovy") )
+
+  ;save-string-to-file ((compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information? ") "t1.txt.cx")
+  (save-string-to-file (compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information?") "t1.txt.cx")
+
+  ;(println (find-first-occurrence-frequency-word "0" "./src/frequency.txt"))
 
 
   ;(print (find-first-occurrence-frequency "lkjdsfjsdjk" "./src/frequency.txt"))
