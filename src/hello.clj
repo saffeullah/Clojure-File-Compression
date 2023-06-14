@@ -85,7 +85,48 @@
 
 
 
+(defn find-word-by-frequency [frequency filename]
+  (with-open [reader (io/reader filename)]
+    (let [content (slurp reader)
+          words (clojure.string/split content #"\s+")
+          unique-words (distinct words)
+          word (nth unique-words frequency)]
+      (if word
+        word
+        ""))))
 
+
+;format string
+
+(defn remove-at-symbols [s]
+  (clojure.string/replace s #"@(.*?)@" "$1"))
+
+(defn capitalize-first-letter [s]
+  (if (empty? s)
+    ""
+    (let [words (clojure.string/split s #"\s+")]
+      (clojure.string/join " "
+                           (map-indexed
+                             (fn [i word]
+                               (if (or (zero? i)
+                                       (and (= (subs (nth words (dec i)) (dec (count (nth words (dec i))))) ".")
+                                            (not (empty? word))))
+                                 (clojure.string/capitalize word)
+                                 word))
+                             words)))))
+
+(defn remove-spaces-before-punctuation [text]
+  (let [pattern #"\s+([.,!?])"]
+    (clojure.string/replace text pattern "$1")))
+
+(defn remove-space-after-brackets [text]
+  (clojure.string/replace text #"\(\s|\[\s" #(str (first %))))
+
+(defn remove-space-before-brackets [text]
+  (clojure.string/replace text #"\s\)|\s\]" #(str (second %))))
+
+(defn remove-space-after-symbols [s]
+  (clojure.string/replace s #"(?<=@|\$)\s+" ""))
 
 
 
@@ -113,17 +154,35 @@
   ;(println (find-word-by-frequency 41 "./src/frequency.txt")  )
 
 
-  (println (let [processed-text (process-text-from-file "t1.txt.cx")]
-             processed-text))
+  ;(println (let [processed-text (process-text-from-file "t1.txt.cx")]
+  ;           processed-text))
+
+  ;(println (let [processed-text (process-text-from-file "t1.txt.cx")]
+  ;           (capitalize-first-letter processed-text)
+  ;
+  ;           ))
+
+  (println
+    (let [processed-text (process-text-from-file "t1.txt.cx")]
+      (-> processed-text
+          (capitalize-first-letter)
+          (remove-at-symbols)
+          (remove-spaces-before-punctuation)
+          (remove-space-after-brackets)
+          (remove-space-before-brackets)
+          (remove-space-after-symbols)
+          )))
+
+
+  ;(println
+  ;  "A ( cat ) is [ there ]")))
 
 
   ;(println (find-first-occurrence-frequency-word "0" "./src/frequency.txt"))
 
 
   ;(print (find-first-occurrence-frequency "lkjdsfjsdjk" "./src/frequency.txt"))
-  )
-
-
+             )
 
 
 ;(let [input (mainMenu)]
