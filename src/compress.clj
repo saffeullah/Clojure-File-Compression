@@ -6,6 +6,7 @@
   (let [files (io/file dir)]
     (filter #(.isFile %) (file-seq files))))
 
+;show current directory
 (defn current-directory-files []
   (let [files (list-files "./src")]
     (doseq [file files]
