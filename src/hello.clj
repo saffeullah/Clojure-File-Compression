@@ -128,10 +128,51 @@
 (defn remove-space-after-symbols [s]
   (clojure.string/replace s #"(?<=@|\$)\s+" ""))
 
+(declare option-1)
+(declare option-2)
 
+(defn main-menu []
+  (println "*** Compression Menu ***")
+  (println "------------------------")
+  (println "Select an option:")
+  (println "1. Display list of files")
+  (println "2. Display file contents")
+  (println "3. Compress a file")
+  (println "4. Uncompress a file")
+  (println "5. Exit")
+  (println "Enter your choice:  ")
+  (let [choice (read)]
+    (case choice
+      1 (option-1)
+      2 (option-1)
+      3 (option-1)
+      4 (option-1)
+      5 (println "Exiting...")
+      (do (println "Invalid choice. Please try again.")
+          (main-menu)))))
+
+(defn option-1 []
+  (println)
+  (println "File List:")
+  (current-directory-files)
+  (println)
+  (main-menu)
+  )
+
+(defn option-2 []
+  (println)
+  (println "File List:")
+  (current-directory-files)
+  (println)
+  (main-menu)
+  )
 
 
 (defn -main []
+
+  (main-menu)
+
+
   ;(print "hello")
   ;(current-directory-files)
   ;(let [filename "abc.txt"]
@@ -162,16 +203,16 @@
   ;
   ;           ))
 
-  (println
-    (let [processed-text (process-text-from-file "t1.txt.cx")]
-      (-> processed-text
-          (capitalize-first-letter)
-          (remove-at-symbols)
-          (remove-spaces-before-punctuation)
-          (remove-space-after-brackets)
-          (remove-space-before-brackets)
-          (remove-space-after-symbols)
-          )))
+  ;(println
+  ;  (let [processed-text (process-text-from-file "t1.txt.cx")]
+  ;    (-> processed-text
+  ;        (capitalize-first-letter)
+  ;        (remove-at-symbols)
+  ;        (remove-spaces-before-punctuation)
+  ;        (remove-space-after-brackets)
+  ;        (remove-space-before-brackets)
+  ;        (remove-space-after-symbols)
+  ;        )))
 
 
   ;(println
@@ -189,22 +230,6 @@
 ;  (println "Selected option was:" input ))
 
 
-;(defn mainMenu []
-;  (println "Select an option:")
-;  (println "1. Display list of files")
-;  (println "2. Display file contents")
-;  (println "3. Compress a file")
-;  (println "4. Uncompress a file")
-;  (println "5. Exit")
-;  (println "Enter your choice:  ")
-;  (let [choice (read)]
-;    (case choice
-;      1 (display-file-list)
-;      2 (display-file-contents)
-;      3 (compress-file)
-;      4 (uncompress-file)
-;      5 (println "Exiting...")
-;      (do (println "Invalid choice. Please try again.")
-;          (mainMenu)))))
+
 
 
