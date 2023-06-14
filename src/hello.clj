@@ -11,13 +11,20 @@
     (doseq [file files]
       (println (.getName file)))))
 
+
 (defn show-file-contents [filename]
-  (let [updated-filename (str "./src/" filename)]
-    (with-open [reader (io/reader updated-filename)]
-      (doseq [line (line-seq reader)]
-        (println line)))
-    )
-  )
+  (let [updated-filename (str "./src/" filename)
+        file (clojure.java.io/file updated-filename)]
+    (if (.exists file)
+      (with-open [reader (io/reader updated-filename)]
+        (println "File Contents:")
+        (doseq [line (line-seq reader)]
+          (println line)))
+      (println (str "File '" filename "' does not exist.")))))
+
+
+
+
 
 (defn get-file-contents [filename]
   (let [updated-filename (str "./src/" filename)]
@@ -53,8 +60,8 @@
     (clojure.string/join " " processed-words)))
 
 
-(defn save-string-to-file [content filename]
-  (  let [updated-filename (str "./src/" filename)]
+(defn save-string-to-file-after-compression [content filename]
+  (  let [updated-filename (str "./src/" filename ".ct")]
     (spit updated-filename content)
     ))
 
@@ -130,6 +137,8 @@
 
 (declare option-1)
 (declare option-2)
+(declare option-3)
+(declare option-4)
 
 (defn main-menu []
   (println "*** Compression Menu ***")
@@ -144,9 +153,9 @@
   (let [choice (read)]
     (case choice
       1 (option-1)
-      2 (option-1)
-      3 (option-1)
-      4 (option-1)
+      2 (option-2)
+      3 (option-3)
+      4 (option-4)
       5 (println "Exiting...")
       (do (println "Invalid choice. Please try again.")
           (main-menu)))))
@@ -161,73 +170,67 @@
 
 (defn option-2 []
   (println)
-  (println "File List:")
-  (current-directory-files)
+  (println "Enter the filename:")
+  (let [filename (read)]
+    (show-file-contents filename))
   (println)
   (main-menu)
   )
 
+(defn option-3 []
+  (println "Enter the filename:")
+  (let [filename (read)]
+    (let [file (java.io.File. (str "./src/" filename))]
+      (if (.exists file)
+        (do
+           (save-string-to-file-after-compression (compress-string (get-file-contents filename)) filename)
+          (println "Compression complete.")
+           (main-menu))
+        (do
+          (println "File not found.")
+          (main-menu))))))
+
+
+(defn uncompress [filename]
+  (println
+    (let [processed-text (process-text-from-file filename)]
+      (-> processed-text
+          (capitalize-first-letter)
+          (remove-at-symbols)
+          (remove-spaces-before-punctuation)
+          (remove-space-after-brackets)
+          (remove-space-before-brackets)
+          (remove-space-after-symbols)
+          )))
+
+  )
+
+
+(defn option-4 []
+  (println "Enter the filename:")
+  (let [filename (read)]
+    (let [file (java.io.File. (str "./src/" filename))]
+      (if (.exists file)
+        (do
+          ;(let [updated-filename (str "./src/" filename)]
+          (uncompress filename)
+          (println "Compression complete.")
+          (main-menu))
+        ;)
+
+        (do
+          (println "File not found.")
+          (main-menu))))))
+
+
+
 
 (defn -main []
-
   (main-menu)
 
-
-  ;(print "hello")
-  ;(current-directory-files)
-  ;(let [filename "abc.txt"]
-  ;  (show-file-contents filename))
-
-  ;(let [word (read-line)
-  ;      filename "./src/frequency.txt"
-  ;      frequency (find-first-occurrence-frequency word filename)]
-  ;  (println "Frequency of first occurrence:" frequency))
+  )
 
 
-    ;(let [file-string (get-file-contents "frequency.txt") ]
-    ;    (println file-string)
-    ;
-    ;  )
-
-  ;save-string-to-file ((compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information? ") "t1.txt.cx")
-  ;(save-string-to-file (compress-string "The experienced man, named Oz, representing the 416 area code - and\nhis (principal) assistant - are not in the suggested @list\n[production, development]. Is that actually the correct information?") "t1.txt.cx")
-
-  ;(println (find-word-by-frequency 41 "./src/frequency.txt")  )
-
-
-  ;(println (let [processed-text (process-text-from-file "t1.txt.cx")]
-  ;           processed-text))
-
-  ;(println (let [processed-text (process-text-from-file "t1.txt.cx")]
-  ;           (capitalize-first-letter processed-text)
-  ;
-  ;           ))
-
-  ;(println
-  ;  (let [processed-text (process-text-from-file "t1.txt.cx")]
-  ;    (-> processed-text
-  ;        (capitalize-first-letter)
-  ;        (remove-at-symbols)
-  ;        (remove-spaces-before-punctuation)
-  ;        (remove-space-after-brackets)
-  ;        (remove-space-before-brackets)
-  ;        (remove-space-after-symbols)
-  ;        )))
-
-
-  ;(println
-  ;  "A ( cat ) is [ there ]")))
-
-
-  ;(println (find-first-occurrence-frequency-word "0" "./src/frequency.txt"))
-
-
-  ;(print (find-first-occurrence-frequency "lkjdsfjsdjk" "./src/frequency.txt"))
-             )
-
-
-;(let [input (mainMenu)]
-;  (println "Selected option was:" input ))
 
 
 
