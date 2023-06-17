@@ -4,7 +4,7 @@
   (:require [compress :as compress])
   )
 
-
+;declaring the functions to be used later
 (declare option-1)
 (declare option-2)
 (declare option-3)
